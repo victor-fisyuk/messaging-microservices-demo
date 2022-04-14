@@ -3,6 +3,7 @@
 # Provisions the following resources:
 #   - messaging database
 #   - database role for services
+#   - database schemas for services
 
 terraform {
   required_providers {
@@ -26,10 +27,16 @@ provider "postgresql" {
   sslmode  = var.database_sslmode
 }
 
-# Database
+# Database and schemas
 
 resource "postgresql_database" "messaging" {
   name = "messaging"
+}
+
+resource "postgresql_schema" "schemas" {
+  for_each = toset(["messages"])
+  database = postgresql_database.messaging.name
+  name     = each.key
 }
 
 # Role for services
@@ -50,4 +57,13 @@ resource "postgresql_grant" "database" {
   role        = postgresql_role.service_app.name
   object_type = "database"
   privileges  = ["CONNECT"]
+}
+
+resource "postgresql_grant" "schemas" {
+  for_each    = postgresql_schema.schemas
+  database    = postgresql_database.messaging.name
+  role        = postgresql_role.service_app.name
+  object_type = "schema"
+  schema      = each.value.name
+  privileges  = ["CREATE", "USAGE"]
 }

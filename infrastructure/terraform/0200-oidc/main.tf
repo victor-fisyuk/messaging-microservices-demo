@@ -2,6 +2,7 @@
 #
 # Provisions the following resources:
 #   - Keycloak messaging realm
+#   - OAuth2 client scopes
 #   - demo users
 
 terraform {
@@ -39,6 +40,26 @@ resource "keycloak_realm" "messaging" {
 resource "keycloak_default_roles" "default_roles" {
   realm_id      = keycloak_realm.messaging.id
   default_roles = []
+}
+
+# OAuth2 client scopes
+
+resource "keycloak_openid_client_scope" "messages_read" {
+  realm_id               = keycloak_realm.messaging.id
+  name                   = "messages:read"
+  description            = "Read messages"
+  consent_screen_text    = "Read your messages"
+  include_in_token_scope = true
+  gui_order              = 1
+}
+
+resource "keycloak_openid_client_scope" "messages_write" {
+  realm_id               = keycloak_realm.messaging.id
+  name                   = "messages:write"
+  description            = "Write messages"
+  consent_screen_text    = "Send new messages and remove your existing messages"
+  include_in_token_scope = true
+  gui_order              = 2
 }
 
 # Users

@@ -1,9 +1,13 @@
 # Messaging Microservices Demo
 
 Demonstrates how to create Java/Spring based microservices using modern approaches:
+* Database schema evolution (Liquibase)
+* Java classes mapping (MapStruct)
 * Infrastructure as Code (HashiCorp Terraform)
 
 ## Prerequisites
+* JDK 11
+* Maven
 * Docker
 * Docker Compose
 * Terraform
