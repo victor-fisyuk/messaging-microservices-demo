@@ -7,6 +7,7 @@ Demonstrates how to create Java/Spring based microservices using modern approach
 * OAuth 2.0 scope based service-to-service authorization (Spring Security/Keycloak)
 * Database schema evolution (Liquibase)
 * Java classes mapping (MapStruct)
+* Containerized microservices (Docker)
 * Infrastructure as Code (HashiCorp Terraform)
 
 ## Prerequisites
@@ -31,10 +32,15 @@ terraform apply
 terraform init
 terraform apply
 ```
-* Run under _infrastructure/terraform/0300-consul_ directory
+* Run under _infrastructure/terraform/0300-consul_ directory (to run microservices without containers)
 ```
 terraform init
 terraform apply
+```
+* Run under _infrastructure/terraform/0300-consul_ directory (to run microservices inside containers)
+```
+terraform init
+terraform apply -var-file="docker.tfvars"
 ```
 
 You can access some infrastructure services using the following addresses:
@@ -43,3 +49,21 @@ You can access some infrastructure services using the following addresses:
 |----------|-----------------------|--------------|
 | Consul   | http://localhost:8500 ||
 | Keycloak | http://localhost:8180 | admin/secret |
+
+## How to run
+
+### Without containers
+* Build and run microservices in _api-gateway_, _messages-service_ and _profiles-service_ directories
+```
+mvn -DskipTests spring-boot:run
+```
+
+### Inside containers
+* Build docker containers for microservices in _api-gateway_, _messages-service_ and _profiles-service_ directories
+```
+mvn -DskipTests package docker:build 
+```
+* Start microservices containers
+```
+docker-compose up -d
+```

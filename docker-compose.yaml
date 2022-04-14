@@ -1,0 +1,25 @@
+services:
+  api-gateway:
+    image: victor.fisyuk/messaging-microservices-demo/api-gateway:0.0.1-SNAPSHOT
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+
+  messages-service:
+    image: victor.fisyuk/messaging-microservices-demo/messages-service:0.0.1-SNAPSHOT
+    container_name: messages-service
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+
+  profiles-service:
+    image: victor.fisyuk/messaging-microservices-demo/profiles-service:0.0.1-SNAPSHOT
+    container_name: profiles-service
+    environment:
+      - SPRING_CLOUD_CONSUL_HOST=consul
+
+networks:
+  default:
+    external:
+      name: messaging-microservices-demo

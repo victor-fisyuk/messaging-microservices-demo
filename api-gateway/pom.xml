@@ -18,6 +18,7 @@
 
     <properties>
         <java.version>11</java.version>
+        <docker-maven-plugin.version>0.39.1</docker-maven-plugin.version>
         <spring-cloud.version>2021.0.1</spring-cloud.version>
     </properties>
 
@@ -37,6 +38,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>${docker-maven-plugin.version}</version>
         </dependency>
 
         <dependency>
@@ -69,6 +75,39 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker-maven-plugin.version}</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <alias>${project.name}</alias>
+                            <name>victor.fisyuk/messaging-microservices-demo/${project.name}:${project.version}</name>
+                            <build>
+                                <contextDir>${project.basedir}/src/main/docker</contextDir>
+                                <assembly>
+                                    <name>app</name>-->
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                            </build>
+                            <run>
+                                <env>
+                                    <SPRING_CLOUD_CONSUL_HOST>consul</SPRING_CLOUD_CONSUL_HOST>
+                                </env>
+                                <ports>
+                                    <port>8080:8080</port>
+                                </ports>
+                                <network>
+                                    <mode>custom</mode>
+                                    <name>messaging-microservices-demo</name>
+                                    <alias>${project.name}</alias>
+                                </network>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
             </plugin>
         </plugins>
     </build>
