@@ -1,6 +1,10 @@
 # Messaging Microservices Demo
 
 Demonstrates how to create Java/Spring based microservices using modern approaches:
+* Service Discovery (HashiCorp Consul)
+* API Gateway (Spring Cloud Gateway)
+* Client-side load-balancing (Spring Cloud LoadBalancer)
+* OAuth 2.0 scope based service-to-service authorization (Spring Security/Keycloak)
 * Database schema evolution (Liquibase)
 * Java classes mapping (MapStruct)
 * Infrastructure as Code (HashiCorp Terraform)
@@ -27,9 +31,15 @@ terraform apply
 terraform init
 terraform apply
 ```
+* Run under _infrastructure/terraform/0300-consul_ directory
+```
+terraform init
+terraform apply
+```
 
 You can access some infrastructure services using the following addresses:
 
 | Service  | Address               | Credentials  |
 |----------|-----------------------|--------------|
+| Consul   | http://localhost:8500 ||
 | Keycloak | http://localhost:8180 | admin/secret |
