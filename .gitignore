@@ -1,0 +1,6 @@
+/.idea/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
