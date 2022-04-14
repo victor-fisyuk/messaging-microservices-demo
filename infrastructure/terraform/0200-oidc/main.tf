@@ -13,6 +13,10 @@ terraform {
       version = "~> 3.7.0"
     }
   }
+
+  backend "consul" {
+    path = "terraform/messaging/state/0200-oidc"
+  }
 }
 
 provider "keycloak" {

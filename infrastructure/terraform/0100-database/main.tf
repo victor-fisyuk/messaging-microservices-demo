@@ -17,6 +17,10 @@ terraform {
       version = "~> 1.15.0"
     }
   }
+
+  backend "consul" {
+    path = "terraform/messaging/state/0100-database"
+  }
 }
 
 provider "postgresql" {

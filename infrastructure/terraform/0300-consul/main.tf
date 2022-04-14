@@ -10,6 +10,10 @@ terraform {
       version = "~> 2.15.1"
     }
   }
+
+  backend "consul" {
+    path = "terraform/messaging/state/0300-consul"
+  }
 }
 
 provider "consul" {
@@ -18,16 +22,16 @@ provider "consul" {
 }
 
 data "terraform_remote_state" "database" {
-  backend = "local"
+  backend = "consul"
   config = {
-    path = "../0100-database/terraform.tfstate"
+    path = "terraform/messaging/state/0100-database"
   }
 }
 
 data "terraform_remote_state" "oidc" {
-  backend = "local"
+  backend = "consul"
   config = {
-    path = "../0200-oidc/terraform.tfstate"
+    path = "terraform/messaging/state/0200-oidc"
   }
 }
 
