@@ -3,6 +3,7 @@
 # Provisions the following resources:
 #   - Keycloak messaging realm
 #   - OAuth2 client scopes
+#   - OAuth2 clients for services
 #   - demo users
 
 terraform {
@@ -78,6 +79,35 @@ resource "keycloak_openid_client_scope" "profiles_write" {
   consent_screen_text    = "Write profiles"
   include_in_token_scope = true
   gui_order              = 4
+}
+
+# Messages Service OAuth2 client
+
+resource "keycloak_openid_client" "messages_service" {
+  realm_id  = keycloak_realm.messaging.id
+  client_id = "messages-service"
+  name      = "Messages Service"
+
+  access_type              = "CONFIDENTIAL"
+  service_accounts_enabled = true
+  full_scope_allowed       = false
+}
+
+resource "keycloak_openid_client_default_scopes" "messages_service_default_scopes" {
+  realm_id  = keycloak_realm.messaging.id
+  client_id = keycloak_openid_client.messages_service.id
+
+  default_scopes = []
+}
+
+resource "keycloak_openid_client_optional_scopes" "messages_service_optional_scopes" {
+  realm_id  = keycloak_realm.messaging.id
+  client_id = keycloak_openid_client.messages_service.id
+
+  optional_scopes = [
+    keycloak_openid_client_scope.profiles_read.name,
+    keycloak_openid_client_scope.profiles_write.name
+  ]
 }
 
 # Users
