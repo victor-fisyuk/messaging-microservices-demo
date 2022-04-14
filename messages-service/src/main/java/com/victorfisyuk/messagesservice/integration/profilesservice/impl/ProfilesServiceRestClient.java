@@ -21,7 +21,7 @@ import static org.springframework.security.oauth2.client.web.reactive.function.c
 @Slf4j
 @Service
 public class ProfilesServiceRestClient implements ProfilesServiceClient {
-    private static final String PROFILE_URL = "http://localhost:8510/api/profiles/profile?userId={userId}";
+    private static final String PROFILE_URL = "http://profiles-service/api/profiles/profile?userId={userId}";
 
     private final WebClient webClient;
     private final OAuth2AuthorizedClientService authorizedClientService;

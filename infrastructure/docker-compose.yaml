@@ -1,6 +1,7 @@
 # Provisions the following containers:
 #   - PostgreSQL 14.2
 #   - Keycloak 14.0.0
+#   - Consul 1.11.4
 
 services:
   postgres:
@@ -33,9 +34,22 @@ services:
     depends_on:
       - postgres
 
+  consul:
+    image: consul:1.11.4
+    container_name: consul
+    restart: always
+    ports:
+      - '8500:8500'
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    volumes:
+      - consul-data:/consul/data
+
 volumes:
   postgres-data:
     name: postgres-data
+  consul-data:
+    name: consul-data
 
 networks:
   default:
