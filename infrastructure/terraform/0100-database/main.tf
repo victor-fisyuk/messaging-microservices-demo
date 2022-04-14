@@ -34,7 +34,7 @@ resource "postgresql_database" "messaging" {
 }
 
 resource "postgresql_schema" "schemas" {
-  for_each = toset(["messages"])
+  for_each = toset(["messages", "profiles"])
   database = postgresql_database.messaging.name
   name     = each.key
 }

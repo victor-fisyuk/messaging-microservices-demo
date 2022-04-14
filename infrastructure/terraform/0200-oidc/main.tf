@@ -62,6 +62,24 @@ resource "keycloak_openid_client_scope" "messages_write" {
   gui_order              = 2
 }
 
+resource "keycloak_openid_client_scope" "profiles_read" {
+  realm_id               = keycloak_realm.messaging.id
+  name                   = "profiles:read"
+  description            = "Read profiles"
+  consent_screen_text    = "Read profiles"
+  include_in_token_scope = true
+  gui_order              = 3
+}
+
+resource "keycloak_openid_client_scope" "profiles_write" {
+  realm_id               = keycloak_realm.messaging.id
+  name                   = "profiles:write"
+  description            = "Write profiles"
+  consent_screen_text    = "Write profiles"
+  include_in_token_scope = true
+  gui_order              = 4
+}
+
 # Users
 
 resource "keycloak_user" "victor_fisyuk" {
