@@ -8,6 +8,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    public static final String SERVICE_CLIENTS_PRINCIPAL_NAME = "service-client";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -22,7 +24,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().denyAll()
                     .and()
                 .oauth2ResourceServer()
-                    .jwt();
+                    .jwt()
+                        .jwtAuthenticationConverter(
+                                new PrincipalNameChangingUserJwtAuthenticationConverter(SERVICE_CLIENTS_PRINCIPAL_NAME));
         // @formatter:on
     }
 }

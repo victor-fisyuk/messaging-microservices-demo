@@ -4,6 +4,7 @@ Demonstrates how to create Java/Spring based microservices using modern approach
 * Service Discovery (HashiCorp Consul)
 * API Gateway (Spring Cloud Gateway)
 * Client-side load-balancing (Spring Cloud LoadBalancer)
+* OpenID Connect based user authentication (Spring Security/Keycloak)
 * OAuth 2.0 scope based service-to-service authorization (Spring Security/Keycloak)
 * Database schema evolution (Liquibase)
 * Java classes mapping (MapStruct)
@@ -67,3 +68,13 @@ mvn -DskipTests package docker:build
 ```
 docker-compose up -d
 ```
+
+## How to use
+
+Open in a browser the following URLs to see the inbox and outbox messages:
+
+http://localhost:8080/api/messages/message/inbox
+<br>
+http://localhost:8080/api/messages/message/outbox
+
+You will be redirected to the login page. Use one of the following users - _victor.fisyuk_, _john.doe_ (use _secret_ as password).

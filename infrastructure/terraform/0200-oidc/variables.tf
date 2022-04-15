@@ -15,6 +15,11 @@ variable "realm_offline_session_max_lifespan" {
   default     = "30m"
 }
 
+variable "api_gateway_url" {
+  type        = string
+  description = "API Gateway base URL"
+}
+
 variable "demo_users_password" {
   type        = string
   description = "Password for demo users"

@@ -3,7 +3,7 @@
 # Provisions the following resources:
 #   - Keycloak messaging realm
 #   - OAuth2 client scopes
-#   - OAuth2 clients for services
+#   - OAuth2 clients for user authentication and services
 #   - demo users
 
 terraform {
@@ -83,6 +83,48 @@ resource "keycloak_openid_client_scope" "profiles_write" {
   consent_screen_text    = "Write profiles"
   include_in_token_scope = true
   gui_order              = 4
+}
+
+# API Gateway OAuth2 client
+
+resource "keycloak_openid_client" "api_gateway" {
+  realm_id  = keycloak_realm.messaging.id
+  client_id = "api-gateway"
+  name      = "API Gateway"
+
+  access_type           = "CONFIDENTIAL"
+  standard_flow_enabled = true
+  consent_required      = true
+  full_scope_allowed    = false
+
+  backchannel_logout_url                     = "${var.api_gateway_url}/logout"
+  backchannel_logout_revoke_offline_sessions = true
+
+  valid_redirect_uris = [
+    "${var.api_gateway_url}/login/oauth2/code/iam",
+    "${var.api_gateway_url}/login",
+    "${var.api_gateway_url}/logout"
+  ]
+}
+
+resource "keycloak_openid_client_default_scopes" "api_gateway_default_scopes" {
+  realm_id  = keycloak_realm.messaging.id
+  client_id = keycloak_openid_client.api_gateway.id
+
+  default_scopes = []
+}
+
+resource "keycloak_openid_client_optional_scopes" "api_gateway_optional_scopes" {
+  realm_id  = keycloak_realm.messaging.id
+  client_id = keycloak_openid_client.api_gateway.id
+
+  optional_scopes = [
+    "email",
+    "profile",
+    "offline_access",
+    keycloak_openid_client_scope.messages_read.name,
+    keycloak_openid_client_scope.messages_write.name
+  ]
 }
 
 # Messages Service OAuth2 client

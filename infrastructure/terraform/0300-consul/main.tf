@@ -40,12 +40,31 @@ locals {
   database_username = data.terraform_remote_state.database.outputs.database_username
   database_password = data.terraform_remote_state.database.outputs.database_password
 
-  keycloak_realm_url          = "${var.keycloak_url}/auth/realms/${data.terraform_remote_state.oidc.outputs.realm_id}"
-  keycloak_jwk_set_url        = "${local.keycloak_realm_url}/protocol/openid-connect/certs"
-  keycloak_token_endpoint_url = "${local.keycloak_realm_url}/protocol/openid-connect/token"
+  keycloak_oidc_base_url          = "${var.keycloak_url}/auth/realms/${data.terraform_remote_state.oidc.outputs.realm_id}/protocol/openid-connect"
+  keycloak_oidc_frontend_base_url = "${var.keycloak_frontend_url}/auth/realms/${data.terraform_remote_state.oidc.outputs.realm_id}/protocol/openid-connect"
+
+  keycloak_jwk_set_url        = "${local.keycloak_oidc_base_url}/certs"
+  keycloak_auth_url           = "${local.keycloak_oidc_frontend_base_url}/auth"
+  keycloak_token_endpoint_url = "${local.keycloak_oidc_base_url}/token"
+  keycloak_user_info_url      = "${local.keycloak_oidc_base_url}/userinfo"
+  keycloak_end_session_url    = "${local.keycloak_oidc_frontend_base_url}/logout"
 }
 
 # Consul keys
+
+resource "consul_key_prefix" "api_gateway_service_config" {
+  path_prefix = "config/api-gateway/"
+
+  subkeys = {
+    "spring.security.oauth2.client.provider.keycloak.jwk-set-uri"       = local.keycloak_jwk_set_url
+    "spring.security.oauth2.client.provider.keycloak.authorization-uri" = local.keycloak_auth_url
+    "spring.security.oauth2.client.provider.keycloak.token-uri"         = local.keycloak_token_endpoint_url
+    "spring.security.oauth2.client.provider.keycloak.user-info-uri"     = local.keycloak_user_info_url
+    "spring.security.oauth2.client.provider.keycloak.end-session-uri"   = local.keycloak_end_session_url
+
+    "spring.security.oauth2.client.registration.iam.client-secret" = data.terraform_remote_state.oidc.outputs.api_gateway_client_secret
+  }
+}
 
 resource "consul_key_prefix" "messages_service_config" {
   path_prefix = "config/messages-service/"
