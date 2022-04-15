@@ -27,6 +27,10 @@ Demonstrates how to create Java/Spring based microservices using modern approach
 ```
 docker-compose up -d
 ```
+* Run under _infrastructure/terraform_ directory
+```
+source ./env.sh
+```
 * Run under _infrastructure/terraform/0100-database_ directory
 ```
 terraform init
@@ -84,3 +88,6 @@ http://localhost:8080/api/messages/message/inbox
 http://localhost:8080/api/messages/message/outbox
 
 You will be redirected to the login page. Use one of the following users - _victor.fisyuk_, _john.doe_ (use _secret_ as password).
+
+By default, there are no messages. You could send new messages using Postman collection _postman_collection.json_.
+You could also update user profiles using Postman.
