@@ -3,11 +3,15 @@ package com.victorfisyuk.profilesservice.profile.impl;
 import com.victorfisyuk.profilesservice.profile.Profile;
 import com.victorfisyuk.profilesservice.profile.ProfileRepository;
 import com.victorfisyuk.profilesservice.profile.ProfileService;
+import com.victorfisyuk.profilesservice.profile.bus.ProfileCreatedEvent;
+import com.victorfisyuk.profilesservice.profile.bus.ProfileUpdatedEvent;
 import com.victorfisyuk.profilesservice.profile.exception.ProfileNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +21,18 @@ import java.util.function.UnaryOperator;
 @Transactional
 @Service
 public class ProfileServiceImpl implements ProfileService {
+    private final String busId;
+    private final ApplicationContext applicationContext;
     private final ProfileRepository profileRepository;
 
     @Autowired
-    public ProfileServiceImpl(ProfileRepository profileRepository) {
+    public ProfileServiceImpl(
+            @Value("${spring.cloud.bus.id}") String busId,
+            ApplicationContext applicationContext,
+            ProfileRepository profileRepository
+    ) {
+        this.busId = busId;
+        this.applicationContext = applicationContext;
         this.profileRepository = profileRepository;
     }
 
@@ -33,7 +45,11 @@ public class ProfileServiceImpl implements ProfileService {
     @CachePut(cacheNames = "profile-by-userid", key = "#result.userId")
     @Override
     public Profile createProfile(Profile profile) {
-        return profileRepository.save(profile);
+        Profile newProfile = profileRepository.save(profile);
+
+        applicationContext.publishEvent(new ProfileCreatedEvent(busId, null, newProfile.getId(),
+                newProfile.getUserId()));
+        return newProfile;
     }
 
     @CachePut(cacheNames = "profile-by-userid", key = "#result.userId")
@@ -44,6 +60,10 @@ public class ProfileServiceImpl implements ProfileService {
 
         log.info("Updating profile {}", profileId);
 
-        return updater.apply(profile);
+        Profile updatedProfile = updater.apply(profile);
+
+        applicationContext.publishEvent(new ProfileUpdatedEvent(busId, null, updatedProfile.getId(),
+                updatedProfile.getUserId()));
+        return updatedProfile;
     }
 }

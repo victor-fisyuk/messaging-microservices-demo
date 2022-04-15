@@ -8,6 +8,7 @@ Demonstrates how to create Java/Spring based microservices using modern approach
 * Distributed sessions (Spring Session/Redis)
 * OAuth 2.0 scope based service-to-service authorization (Spring Security/Keycloak)
 * Data caching (Spring Cache/Redis)
+* Cloud Bus to broadcast cache invalidation notifications between microservices (Spring Cloud Bus/Apache Kafka)
 * Database schema evolution (Liquibase)
 * Java classes mapping (MapStruct)
 * Containerized microservices (Docker)
@@ -52,6 +53,7 @@ You can access some infrastructure services using the following addresses:
 |----------|-----------------------|--------------|
 | Consul   | http://localhost:8500 ||
 | Keycloak | http://localhost:8180 | admin/secret |
+| Kafdrop  | http://localhost:9000 ||
 
 ## How to run
 

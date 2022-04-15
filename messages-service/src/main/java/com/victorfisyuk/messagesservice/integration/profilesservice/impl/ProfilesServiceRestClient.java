@@ -2,8 +2,13 @@ package com.victorfisyuk.messagesservice.integration.profilesservice.impl;
 
 import com.victorfisyuk.messagesservice.integration.profilesservice.ProfileDTO;
 import com.victorfisyuk.messagesservice.integration.profilesservice.ProfilesServiceClient;
+import com.victorfisyuk.messagesservice.integration.profilesservice.bus.ProfileCreatedEvent;
+import com.victorfisyuk.messagesservice.integration.profilesservice.bus.ProfileUpdatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +37,7 @@ public class ProfilesServiceRestClient implements ProfilesServiceClient {
         this.authorizedClientService = authorizedClientService;
     }
 
+    @Cacheable("profile-by-userid")
     @Override
     public Optional<ProfileDTO> getProfile(String userId) {
         log.debug("Calling {}", PROFILE_URL);
@@ -45,6 +51,20 @@ public class ProfilesServiceRestClient implements ProfilesServiceClient {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ProfileDTO>(){})
                 .block());
+    }
+
+    @CacheEvict(cacheNames = "profile-by-userid", key = "#profileCreatedEvent.userId")
+    @EventListener
+    public void handleProfileCreatedEvent(final ProfileCreatedEvent profileCreatedEvent) {
+        log.info("Profile {} of user {} is created. Evicting the cache.", profileCreatedEvent.getProfileId(),
+                profileCreatedEvent.getUserId());
+    }
+
+    @CacheEvict(cacheNames = "profile-by-userid", key = "#profileUpdatedEvent.userId")
+    @EventListener
+    public void handleProfileUpdatedEvent(final ProfileUpdatedEvent profileUpdatedEvent) {
+        log.info("Profile {} of user {} is updated. Evicting the cache.", profileUpdatedEvent.getProfileId(),
+                profileUpdatedEvent.getUserId());
     }
 
     private OAuth2AuthorizedClient getMessagesServiceOAuth2AuthorizedClient() {

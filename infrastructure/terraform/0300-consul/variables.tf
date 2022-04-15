@@ -34,3 +34,8 @@ variable "redis_host" {
   type        = string
   description = "Redis server host"
 }
+
+variable "kafka_bootstrap_servers" {
+  type        = list(string)
+  description = "Kafka bootstrap servers"
+}

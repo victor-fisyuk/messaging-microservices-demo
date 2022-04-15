@@ -48,6 +48,8 @@ locals {
   keycloak_token_endpoint_url = "${local.keycloak_oidc_base_url}/token"
   keycloak_user_info_url      = "${local.keycloak_oidc_base_url}/userinfo"
   keycloak_end_session_url    = "${local.keycloak_oidc_frontend_base_url}/logout"
+
+  kafka_bootstrap_servers = join(",", var.kafka_bootstrap_servers)
 }
 
 # Consul keys
@@ -83,7 +85,9 @@ resource "consul_key_prefix" "messages_service_config" {
 
     "spring.security.oauth2.client.registration.messages-service.client-secret" = data.terraform_remote_state.oidc.outputs.messages_service_client_secret
 
-    "spring.redis.host" = var.redis_host
+    "spring.redis.host"                        = var.redis_host
+    "spring.kafka.bootstrap-servers"           = local.kafka_bootstrap_servers
+    "spring.cloud.stream.kafka.binder.brokers" = local.kafka_bootstrap_servers
   }
 }
 
@@ -97,7 +101,9 @@ resource "consul_key_prefix" "profiles_service_config" {
 
     "spring.security.oauth2.resourceserver.jwt.jwk-set-uri" = local.keycloak_jwk_set_url
 
-    "spring.redis.host" = var.redis_host
+    "spring.redis.host"                        = var.redis_host
+    "spring.kafka.bootstrap-servers"           = local.kafka_bootstrap_servers
+    "spring.cloud.stream.kafka.binder.brokers" = local.kafka_bootstrap_servers
 
     "initial-profiles" = jsonencode([for user in data.terraform_remote_state.oidc.outputs.users : {
       user_id    = user.id
