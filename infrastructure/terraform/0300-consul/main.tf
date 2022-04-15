@@ -63,6 +63,8 @@ resource "consul_key_prefix" "api_gateway_service_config" {
     "spring.security.oauth2.client.provider.keycloak.end-session-uri"   = local.keycloak_end_session_url
 
     "spring.security.oauth2.client.registration.iam.client-secret" = data.terraform_remote_state.oidc.outputs.api_gateway_client_secret
+
+    "spring.redis.host" = var.redis_host
   }
 }
 

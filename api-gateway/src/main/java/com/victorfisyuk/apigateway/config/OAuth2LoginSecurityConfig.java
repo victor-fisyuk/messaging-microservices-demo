@@ -10,6 +10,8 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.client.web.server.WebSessionServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
 
@@ -55,6 +57,11 @@ public class OAuth2LoginSecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public ServerOAuth2AuthorizedClientRepository authorizedClientRepository() {
+        return new WebSessionServerOAuth2AuthorizedClientRepository();
+    }
+
     /**
      * Workaround for the issue with {@link OidcClientInitiatedServerLogoutSuccessHandler} which doesn't work in case
      * when the OAuth 2.0 provider configuration doesn't have <i>issuer-uri</i> property set.
@@ -79,6 +86,7 @@ public class OAuth2LoginSecurityConfig {
                     return ClientRegistration.withClientRegistration(clientRegistration)
                             .providerConfigurationMetadata(Collections.singletonMap("end_session_endpoint",
                                     endSessionEndpoint))
+                            .scope(clientRegistration.getScopes())
                             .build();
                 })
                 .collect(Collectors.toList());

@@ -2,6 +2,7 @@
 #   - PostgreSQL 14.2
 #   - Keycloak 14.0.0
 #   - Consul 1.11.4
+#   - Redis 6.2.6
 
 services:
   postgres:
@@ -46,11 +47,22 @@ services:
     volumes:
       - consul-data:/consul/data
 
+  redis:
+    image: redis:6.2.6
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
 volumes:
   postgres-data:
     name: postgres-data
   consul-data:
     name: consul-data
+  redis-data:
+    name: redis-data
 
 networks:
   default:

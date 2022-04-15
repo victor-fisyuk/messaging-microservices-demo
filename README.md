@@ -5,6 +5,7 @@ Demonstrates how to create Java/Spring based microservices using modern approach
 * API Gateway (Spring Cloud Gateway)
 * Client-side load-balancing (Spring Cloud LoadBalancer)
 * OpenID Connect based user authentication (Spring Security/Keycloak)
+* Distributed sessions (Spring Session/Redis)
 * OAuth 2.0 scope based service-to-service authorization (Spring Security/Keycloak)
 * Database schema evolution (Liquibase)
 * Java classes mapping (MapStruct)

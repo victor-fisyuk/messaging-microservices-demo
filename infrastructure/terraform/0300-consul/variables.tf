@@ -29,3 +29,8 @@ variable "keycloak_frontend_url" {
   type        = string
   description = "Keycloak instance URL, before /auth/admin, used for user authentication"
 }
+
+variable "redis_host" {
+  type        = string
+  description = "Redis server host"
+}
