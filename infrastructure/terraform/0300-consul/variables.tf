@@ -39,3 +39,8 @@ variable "kafka_bootstrap_servers" {
   type        = list(string)
   description = "Kafka bootstrap servers"
 }
+
+variable "zipkin_base_url" {
+  type        = string
+  description = "URL of the Zipkin query server instance"
+}

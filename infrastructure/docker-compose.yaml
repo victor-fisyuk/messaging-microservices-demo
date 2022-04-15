@@ -6,6 +6,7 @@
 #   - Zookeeper 3.8.0
 #   - Kafka 3.1.0 (3 brokers)
 #   - Kafdrop 3.29.0
+#   - Zipkin 2.23.16
 
 services:
   postgres:
@@ -139,6 +140,15 @@ services:
       - kafka1
       - kafka2
       - kafka3
+
+  zipkin:
+    image: openzipkin/zipkin:2.23.16
+    container_name: zipkin
+    restart: always
+    ports:
+      - '9411:9411'
+    environment:
+      - STORAGE_TYPE=mem
 
 volumes:
   postgres-data:

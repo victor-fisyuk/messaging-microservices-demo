@@ -11,6 +11,7 @@ Demonstrates how to create Java/Spring based microservices using modern approach
 * Cloud Bus to broadcast cache invalidation notifications between microservices (Spring Cloud Bus/Apache Kafka)
 * Database schema evolution (Liquibase)
 * Java classes mapping (MapStruct)
+* Distributed tracing (Spring Sleuth/Zipkin)
 * Containerized microservices (Docker)
 * Infrastructure as Code (HashiCorp Terraform)
 
@@ -54,6 +55,7 @@ You can access some infrastructure services using the following addresses:
 | Consul   | http://localhost:8500 ||
 | Keycloak | http://localhost:8180 | admin/secret |
 | Kafdrop  | http://localhost:9000 ||
+| Zipkin   | http://localhost:9411 ||
 
 ## How to run
 

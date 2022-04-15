@@ -66,7 +66,8 @@ resource "consul_key_prefix" "api_gateway_service_config" {
 
     "spring.security.oauth2.client.registration.iam.client-secret" = data.terraform_remote_state.oidc.outputs.api_gateway_client_secret
 
-    "spring.redis.host" = var.redis_host
+    "spring.redis.host"      = var.redis_host
+    "spring.zipkin.base-url" = var.zipkin_base_url
   }
 }
 
@@ -88,6 +89,7 @@ resource "consul_key_prefix" "messages_service_config" {
     "spring.redis.host"                        = var.redis_host
     "spring.kafka.bootstrap-servers"           = local.kafka_bootstrap_servers
     "spring.cloud.stream.kafka.binder.brokers" = local.kafka_bootstrap_servers
+    "spring.zipkin.base-url"                   = var.zipkin_base_url
   }
 }
 
@@ -104,6 +106,7 @@ resource "consul_key_prefix" "profiles_service_config" {
     "spring.redis.host"                        = var.redis_host
     "spring.kafka.bootstrap-servers"           = local.kafka_bootstrap_servers
     "spring.cloud.stream.kafka.binder.brokers" = local.kafka_bootstrap_servers
+    "spring.zipkin.base-url"                   = var.zipkin_base_url
 
     "initial-profiles" = jsonencode([for user in data.terraform_remote_state.oidc.outputs.users : {
       user_id    = user.id
