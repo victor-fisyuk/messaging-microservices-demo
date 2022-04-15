@@ -7,6 +7,7 @@ Demonstrates how to create Java/Spring based microservices using modern approach
 * OpenID Connect based user authentication (Spring Security/Keycloak)
 * Distributed sessions (Spring Session/Redis)
 * OAuth 2.0 scope based service-to-service authorization (Spring Security/Keycloak)
+* Data caching (Spring Cache/Redis)
 * Database schema evolution (Liquibase)
 * Java classes mapping (MapStruct)
 * Containerized microservices (Docker)

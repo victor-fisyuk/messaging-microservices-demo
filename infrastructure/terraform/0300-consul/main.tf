@@ -82,6 +82,8 @@ resource "consul_key_prefix" "messages_service_config" {
     "spring.security.oauth2.client.provider.keycloak.token-uri"   = local.keycloak_token_endpoint_url
 
     "spring.security.oauth2.client.registration.messages-service.client-secret" = data.terraform_remote_state.oidc.outputs.messages_service_client_secret
+
+    "spring.redis.host" = var.redis_host
   }
 }
 
@@ -94,6 +96,8 @@ resource "consul_key_prefix" "profiles_service_config" {
     "spring.datasource.password" = local.database_password
 
     "spring.security.oauth2.resourceserver.jwt.jwk-set-uri" = local.keycloak_jwk_set_url
+
+    "spring.redis.host" = var.redis_host
 
     "initial-profiles" = jsonencode([for user in data.terraform_remote_state.oidc.outputs.users : {
       user_id    = user.id
