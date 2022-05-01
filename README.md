@@ -41,15 +41,10 @@ terraform apply
 terraform init
 terraform apply
 ```
-* Run under _infrastructure/terraform/0300-consul_ directory (to run microservices without containers)
+* Run under _infrastructure/terraform/0300-consul_ directory
 ```
 terraform init
 terraform apply
-```
-* Run under _infrastructure/terraform/0300-consul_ directory (to run microservices inside containers)
-```
-terraform init
-terraform apply -var-file="docker.tfvars"
 ```
 
 You can access some infrastructure services using the following addresses:
@@ -72,7 +67,7 @@ mvn -DskipTests spring-boot:run
 ### Inside containers
 * Build docker containers for microservices in _api-gateway_, _messages-service_ and _profiles-service_ directories
 ```
-mvn -DskipTests package docker:build 
+mvn -DskipTests clean package docker:build
 ```
 * Start microservices containers
 ```

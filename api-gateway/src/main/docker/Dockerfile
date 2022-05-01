@@ -11,6 +11,8 @@ LABEL org.opencontainers.image.authors="Victor Fisyuk <victor.fisyuk@gmail.com>"
 
 WORKDIR /app/
 
+ENV SPRING_PROFILES_ACTIVE=docker
+
 COPY --from=builder app/dependencies/ ./
 COPY --from=builder app/spring-boot-loader/ ./
 COPY --from=builder app/snapshot-dependencies/ ./
